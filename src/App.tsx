@@ -28,6 +28,7 @@ import { VisualizationsView } from './components/VisualizationsView';
 import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
+import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 
 export default function App() {
@@ -467,7 +468,10 @@ export default function App() {
           )}
 
           {currentView === 'features' && (
-            <FeaturesView onNavigate={setCurrentView} />
+            <div className="flex flex-col gap-10">
+              <FeaturesView onNavigate={setCurrentView} />
+              <EntityManagementView />
+            </div>
           )}
         </main>
       </div>

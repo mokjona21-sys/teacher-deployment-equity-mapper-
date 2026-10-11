@@ -499,8 +499,8 @@ function LoginPage({ onAuthenticated }: { onAuthenticated: () => void }) {
     setError('');
 
     if (
-      username === import.meta.env.ADMIN_NAME &&
-      password === import.meta.env.ADMIN_PASSWORD
+username === import.meta.env.vite_app_name &&
+    password === import.meta.env.vite_app_password
     ) {
       localStorage.setItem('edumap_authenticated', 'true');
       onAuthenticated();

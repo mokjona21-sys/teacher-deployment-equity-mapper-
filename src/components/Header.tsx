@@ -44,6 +44,10 @@ const VIEW_TITLES: Record<ViewMode, { title: string; subtitle: string }> = {
     title: 'Audit Summary & Data Export',
     subtitle: 'Formal compliance review, CSV extract, and equity methodology',
   },
+  features: {
+    title: 'Features & Workflows',
+    subtitle: 'Explore the tools for managing schools, teachers, districts, and equity decisions',
+  },
 };
 
 export const Header: React.FC<HeaderProps> = ({

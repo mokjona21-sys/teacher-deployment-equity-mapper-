@@ -27,6 +27,7 @@ import { RedeploymentView } from './components/RedeploymentView';
 import { VisualizationsView } from './components/VisualizationsView';
 import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
+import { FeaturesView } from './components/FeaturesView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 
 export default function App() {
@@ -463,6 +464,10 @@ export default function App() {
               districtSummaries={districtSummaries}
               onExportCSV={handleExportCSV}
             />
+          )}
+
+          {currentView === 'features' && (
+            <FeaturesView onNavigate={setCurrentView} />
           )}
         </main>
       </div>

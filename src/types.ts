@@ -27,7 +27,8 @@ export type ViewMode =
   | 'redeployment' 
   | 'visualizations' 
   | 'map' 
-  | 'audit';
+  | 'audit' 
+  | 'features';
 
 export type StatusFilter = 'all' | 'shortage' | 'surplus' | 'balanced';
 

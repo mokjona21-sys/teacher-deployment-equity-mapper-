@@ -29,9 +29,10 @@ import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
+import { LoginPage } from './components/LoginPage';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 
-export default function App() {
+function DashboardApp() {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -488,3 +489,27 @@ export default function App() {
     </div>
   );
 }
+
+function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+
+  useEffect(() => {
+    fetch('/api/session', { credentials: 'include' })
+      .then((response) => setIsAuthenticated(response.ok))
+      .catch(() => setIsAuthenticated(false));
+  }, []);
+
+  const handleAuthenticated = () => {
+    window.history.replaceState({}, '', '/');
+    setIsAuthenticated(true);
+  };
+
+  if (isAuthenticated === null) return null;
+  if (!isAuthenticated || window.location.pathname === '/login') {
+    return <LoginPage onAuthenticated={handleAuthenticated} />;
+  }
+
+  return <DashboardApp />;
+}
+
+export default App;

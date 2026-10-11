@@ -489,7 +489,90 @@ function DashboardApp() {
   );
 }
 
+function LoginPage({ onAuthenticated }: { onAuthenticated: () => void }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setError('');
+
+    if (
+      username === import.meta.env.ADMIN_NAME &&
+      password === import.meta.env.ADMIN_PASSWORD
+    ) {
+      localStorage.setItem('edumap_authenticated', 'true');
+      onAuthenticated();
+      return;
+    }
+
+    setError('Invalid username or password');
+  };
+
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-slate-950 px-6 py-12 text-slate-100">
+      <section className="w-full max-w-md rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl">
+        <div className="mb-8">
+          <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-teal-400">EduMap</p>
+          <h1 className="text-3xl font-semibold tracking-tight">Sign in to your dashboard</h1>
+          <p className="mt-2 text-sm text-slate-400">Enter your administrator credentials to continue.</p>
+        </div>
+
+        <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
+          <label className="flex flex-col gap-2 text-sm font-medium text-slate-200">
+            Username
+            <input
+              autoComplete="username"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
+              onChange={(event) => setUsername(event.target.value)}
+              placeholder="Enter your username"
+              required
+              type="text"
+              value={username}
+            />
+          </label>
+
+          <label className="flex flex-col gap-2 text-sm font-medium text-slate-200">
+            Password
+            <input
+              autoComplete="current-password"
+              className="rounded-lg border border-slate-700 bg-slate-950 px-4 py-3 text-slate-100 outline-none transition placeholder:text-slate-500 focus:border-teal-400 focus:ring-2 focus:ring-teal-400/20"
+              onChange={(event) => setPassword(event.target.value)}
+              placeholder="Enter your password"
+              required
+              type="password"
+              value={password}
+            />
+          </label>
+
+          {error && (
+            <p aria-live="polite" className="rounded-lg border border-red-900/60 bg-red-950/40 px-4 py-3 text-sm text-red-300">
+              {error}
+            </p>
+          )}
+
+          <button
+            className="rounded-lg bg-teal-500 px-4 py-3 font-semibold text-slate-950 transition hover:bg-teal-400 focus:outline-none focus:ring-2 focus:ring-teal-300 focus:ring-offset-2 focus:ring-offset-slate-900"
+            type="submit"
+          >
+            Sign in
+          </button>
+        </form>
+      </section>
+    </main>
+  );
+}
+
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() =>
+    localStorage.getItem('edumap_authenticated') === 'true',
+  );
+
+  if (!isAuthenticated) {
+    return <LoginPage onAuthenticated={() => setIsAuthenticated(true)} />;
+  }
+
   return <DashboardApp />;
 }
 

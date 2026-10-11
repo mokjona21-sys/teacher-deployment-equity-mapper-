@@ -494,9 +494,21 @@ function App() {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
 
   useEffect(() => {
+    let isMounted = true;
+
     fetch('/api/session', { credentials: 'include' })
-      .then((response) => setIsAuthenticated(response.ok))
-      .catch(() => setIsAuthenticated(false));
+      .then(async (response) => {
+        const contentType = response.headers.get('content-type') ?? '';
+        const isSessionResponse = contentType.includes('application/json');
+        if (isMounted) setIsAuthenticated(isSessionResponse && response.ok);
+      })
+      .catch(() => {
+        if (isMounted) setIsAuthenticated(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const handleAuthenticated = () => {

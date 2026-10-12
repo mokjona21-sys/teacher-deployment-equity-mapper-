@@ -116,8 +116,21 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   }, [filteredRecords]);
 
   const assistantContext = JSON.stringify({
+    system: 'Teacher Deployment Equity Mapper',
+    currentView,
+    activeFilters: filters,
     metrics,
-    visibleSchools: filteredRecords.slice(0, 40).map(({ school, district, subject, required, available }) => ({ school, district, subject, required, available, balance: available - required })),
+    subjectSummaries,
+    districtSummaries,
+    visibleSchools: filteredRecords.slice(0, 100).map(({ school, district, subject, required, available }) => ({
+      school,
+      district,
+      subject,
+      required,
+      available,
+      balance: available - required,
+    })),
+    recommendations: recommendations.slice(0, 50),
   });
 
   // Reset filters

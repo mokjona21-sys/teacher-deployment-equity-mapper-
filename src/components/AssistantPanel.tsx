@@ -37,7 +37,7 @@ export function AssistantPanel({ context, onClose }: AssistantPanelProps) {
   }
 
   return (
-    <aside id="mapper-assistant-panel" className="fixed right-5 top-[4.5rem] z-[60] flex max-h-[min(32rem,calc(100dvh-6rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-950/20 backdrop-blur-md dark:border-slate-700/90 dark:bg-slate-900/95" aria-label="Equity mapper AI assistant">
+    <aside id="mapper-assistant-panel" className="fixed inset-x-3 top-[4.25rem] z-[60] flex max-h-[calc(100dvh-5.5rem)] w-auto flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-950/20 backdrop-blur-md dark:border-slate-700/90 dark:bg-slate-900/95 sm:left-auto sm:right-5 sm:w-[min(390px,calc(100vw-2rem))]" aria-label="Equity mapper AI assistant">
       <div className="flex items-center justify-between bg-slate-950 px-4 py-3 text-white dark:bg-teal-700">
         <div className="flex items-center gap-3">
           <Bot className="h-5 w-5 text-teal-300" />
@@ -51,8 +51,17 @@ export function AssistantPanel({ context, onClose }: AssistantPanelProps) {
         </button>
       </div>
 
-      <div className="max-h-72 overflow-y-auto p-4 text-sm">
-        {!answer && !error && <p className="text-slate-500 dark:text-slate-400">Try “Which schools have the largest teacher shortages?”</p>}
+      <div className="min-h-0 flex-1 overflow-y-auto p-4 text-sm">
+        {!answer && !error && (
+          <div className="space-y-3">
+            <p className="text-slate-500 dark:text-slate-400">Ask about the current dashboard, staffing gaps, or redeployment recommendations.</p>
+            <div className="flex flex-wrap gap-2">
+              {['Largest shortages?', 'How does redeployment work?', 'Explain these KPIs'].map((prompt) => (
+                <button key={prompt} type="button" onClick={() => setQuestion(prompt)} className="rounded-full border border-teal-200 px-2.5 py-1.5 text-left text-xs font-medium text-teal-700 hover:bg-teal-50 dark:border-teal-800 dark:text-teal-300 dark:hover:bg-teal-950/40">{prompt}</button>
+              ))}
+            </div>
+          </div>
+        )}
         {isLoading && <div className="flex items-center gap-2 text-slate-500"><Loader2 className="h-4 w-4 animate-spin" />Analyzing the dashboard…</div>}
         {answer && <p className="whitespace-pre-wrap leading-6 text-slate-700 dark:text-slate-200">{answer}</p>}
         {error && <p role="alert" className="text-rose-600 dark:text-rose-400">{error}</p>}

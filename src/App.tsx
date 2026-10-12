@@ -30,7 +30,10 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
-function DashboardApp() {
+import { LoginPage } from './components/LoginPage';
+import { firebaseAuth } from './lib/firebase';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
+function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -276,9 +279,10 @@ function DashboardApp() {
           isDark={isDark}
           onToggleDark={() => setIsDark(!isDark)}
           onExportCSV={handleExportCSV}
-  onNavigateToRedeployment={() => setCurrentView('redeployment')}
-  feasibleMovesCount={metrics.totalFeasibleMoves}
-  />
+          onNavigateToRedeployment={() => setCurrentView('redeployment')}
+          feasibleMovesCount={metrics.totalFeasibleMoves}
+          onLogout={onLogout}
+        />
 
         {/* Scrollable View Content */}
         <main className="flex-1 overflow-y-auto px-4 lg:px-8 py-6 max-w-7xl w-full mx-auto">
@@ -512,9 +516,27 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, { error:
 }
 
 function App() {
+  const [user, setUser] = useState<import('firebase/auth').User | null>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    return onAuthStateChanged(firebaseAuth, (nextUser) => {
+      setUser(nextUser);
+      setAuthReady(true);
+    });
+  }, []);
+
+  if (!authReady) {
+    return <div className="min-h-screen bg-slate-950" aria-label="Loading authentication" />;
+  }
+
+  if (!user) {
+    return <LoginPage onAuthenticated={() => undefined} />;
+  }
+
   return (
     <AppErrorBoundary>
-      <DashboardApp />
+      <DashboardApp onLogout={() => signOut(firebaseAuth)} />
     </AppErrorBoundary>
   );
 }

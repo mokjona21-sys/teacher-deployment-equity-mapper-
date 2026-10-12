@@ -28,7 +28,6 @@ import { VisualizationsView } from './components/VisualizationsView';
 import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
-import { EntityManagementView, INITIAL_ENTITIES, Entity } from './components/EntityManagementView';
 import { FAQView } from './components/FAQView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 import { LoginPage } from './components/LoginPage';
@@ -66,21 +65,10 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
   // School dataset state (with support for live in-memory redeployment simulations)
   const [records, setRecords] = useState<SchoolRecord[]>(INITIAL_RECORDS);
-  const [directoryEntities, setDirectoryEntities] = useState<Entity[]>(() => {
-    if (typeof window === 'undefined') return INITIAL_ENTITIES;
-    const saved = localStorage.getItem('edumap_directory_entities');
-    if (!saved) return INITIAL_ENTITIES;
-    try {
-      return JSON.parse(saved) as Entity[];
-    } catch {
-      return INITIAL_ENTITIES;
-    }
-  });
-  const [isSimulated, setIsSimulated] = useState<boolean>(false);
-
   useEffect(() => {
-    localStorage.setItem('edumap_directory_entities', JSON.stringify(directoryEntities));
-  }, [directoryEntities]);
+    localStorage.removeItem('edumap_directory_entities');
+  }, []);
+  const [isSimulated, setIsSimulated] = useState<boolean>(false);
 
   // Inspected school for detail modal
   const [selectedSchool, setSelectedSchool] = useState<SchoolRecord | null>(null);
@@ -94,28 +82,11 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
     maxDistance: 30,
   });
 
-  const directoryRecords = useMemo<SchoolRecord[]>(() => directoryEntities
-    .filter((entity) => entity.type === 'school')
-    .map((entity, index) => ({
-      id: `directory-${entity.id}`,
-      school: entity.name,
-      district: entity.detail,
-      subject: 'General Staffing',
-      required: 1,
-      available: 1,
-      km: 0,
-      studentCount: Number.parseInt(entity.meta.replace(/[^0-9]/g, ''), 10) || undefined,
-      coordinates: { x: 50 + (index % 5) * 4, y: 50 + (index % 4) * 4 },
-    })), [directoryEntities]);
+  const combinedRecords = records;
 
-  const combinedRecords = useMemo(() => {
-    const knownSchools = new Set(records.map((record) => record.school));
-    return [...records, ...directoryRecords.filter((record) => !knownSchools.has(record.school))];
-  }, [directoryRecords, records]);
-
-  // Unique dropdown lists include records created in the directory.
-  const districts = useMemo(() => [...new Set(combinedRecords.map((record) => record.district))].sort(), [combinedRecords]);
-  const subjects = useMemo(() => [...new Set(combinedRecords.map((record) => record.subject))].sort(), [combinedRecords]);
+  // Unique dropdown lists include only verified dashboard records.
+  const districts = useMemo(() => [...new Set(combinedRecords.map((record) => record.district))].filter((district) => !['Lake', 'Lakeside', 'North', 'North Valley'].includes(district)).sort(), [combinedRecords]);
+  const subjects = useMemo(() => [...new Set(combinedRecords.map((record) => record.subject))].filter((subject) => subject !== 'General Staffing').sort(), [combinedRecords]);
 
   // Filtered dataset based on current and directory-created records.
   const filteredRecords = useMemo(() => filterRecords(combinedRecords, filters), [combinedRecords, filters]);
@@ -504,7 +475,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           {currentView === 'features' && (
             <div className="flex flex-col gap-10">
               <FeaturesView onNavigate={setCurrentView} />
-              <EntityManagementView entities={directoryEntities} onEntitiesChange={setDirectoryEntities} />
             </div>
           )}
 

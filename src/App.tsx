@@ -276,9 +276,9 @@ function DashboardApp() {
           isDark={isDark}
           onToggleDark={() => setIsDark(!isDark)}
           onExportCSV={handleExportCSV}
-          onNavigateToRedeployment={() => setCurrentView('redeployment')}
-          feasibleMovesCount={metrics.totalFeasibleMoves}
-          />
+  onNavigateToRedeployment={() => setCurrentView('redeployment')}
+  feasibleMovesCount={metrics.totalFeasibleMoves}
+  />
 
         {/* Scrollable View Content */}
         <main className="flex-1 overflow-y-auto px-4 lg:px-8 py-6 max-w-7xl w-full mx-auto">

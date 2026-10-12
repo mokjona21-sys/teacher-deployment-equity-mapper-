@@ -99,6 +99,10 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
     return generateRecommendations(filteredRecords, filters.maxDistance);
   }, [filteredRecords, filters.maxDistance]);
 
+  const allMapTransfers = useMemo(() => {
+    return generateRecommendations(records, filters.maxDistance);
+  }, [records, filters.maxDistance]);
+
   // Key KPI metrics
   const metrics = useMemo(() => {
     return computeMetrics(filteredRecords, recommendations);
@@ -452,8 +456,8 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
           {currentView === 'map' && (
             <DistrictMapView
-              records={filteredRecords}
-              moves={recommendations}
+              records={records}
+              moves={allMapTransfers}
               onSelectSchool={setSelectedSchool}
               selectedDistrict={filters.district}
               onDistrictSelect={(d) => setFilters({ ...filters, district: d })}

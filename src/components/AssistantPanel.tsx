@@ -56,7 +56,7 @@ export function AssistantPanel({ context, onClose }: AssistantPanelProps) {
         );
       }
 
-      if (!response.ok) throw new Error(payload.error ?? 'The assistant could not respond.');
+      if (!response.ok) throw new Error(payload.error ?? (response.status === 402 ? 'Vercel AI Gateway billing verification is required.' : 'The assistant could not respond.'));
       if (!payload.answer) throw new Error('The assistant returned an empty response. Please try again.');
       setMessages((current) => [...current, { id: nextMessageId.current++, role: 'assistant', content: payload.answer! }]);
     } catch (requestError) {

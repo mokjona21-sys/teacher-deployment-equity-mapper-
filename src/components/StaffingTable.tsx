@@ -18,6 +18,8 @@ interface StaffingTableProps {
   onAdjustStaffing: (id: string, delta: number) => void;
   onResetFilters: () => void;
   onAddRecord: (record: SchoolRecord) => void;
+  districts: string[];
+  subjects: string[];
 }
 
 type SortField = 'school' | 'district' | 'subject' | 'required' | 'available' | 'gap' | 'km';
@@ -29,6 +31,8 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
   onAdjustStaffing,
   onResetFilters,
   onAddRecord,
+  districts,
+  subjects,
 }) => {
   const [sortField, setSortField] = useState<SortField>('gap');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -76,7 +80,7 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
         </div>
       </div>
 
-      <AddRosterRecordForm onAdd={onAddRecord} />
+      <AddRosterRecordForm onAdd={onAddRecord} districts={districts} subjects={subjects} />
 
       {/* Table Content */}
       <div className="overflow-x-auto">

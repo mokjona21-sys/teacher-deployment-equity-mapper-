@@ -345,6 +345,8 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   onAdjustStaffing={handleAdjustStaffing}
   onResetFilters={handleResetFilters}
   onAddRecord={handleAddRecord}
+  districts={districts}
+  subjects={subjects}
   />
                 </div>
 
@@ -443,6 +445,8 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   onAdjustStaffing={handleAdjustStaffing}
   onResetFilters={handleResetFilters}
   onAddRecord={handleAddRecord}
+  districts={districts}
+  subjects={subjects}
   />
   )}
 

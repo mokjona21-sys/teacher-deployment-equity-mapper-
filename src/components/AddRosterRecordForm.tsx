@@ -4,11 +4,13 @@ import { SchoolRecord } from '../types';
 
 type AddRosterRecordFormProps = {
   onAdd: (record: SchoolRecord) => void;
+  districts: string[];
+  subjects: string[];
 };
 
 const initialForm = { district: '', school: '', subject: 'Mathematics', pupils: '', required: '', available: '', km: '' };
 
-export const AddRosterRecordForm: React.FC<AddRosterRecordFormProps> = ({ onAdd }) => {
+export const AddRosterRecordForm: React.FC<AddRosterRecordFormProps> = ({ onAdd, districts, subjects }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [form, setForm] = useState(initialForm);
 
@@ -48,10 +50,27 @@ export const AddRosterRecordForm: React.FC<AddRosterRecordFormProps> = ({ onAdd 
             <button type="button" onClick={() => setIsOpen(false)} aria-label="Close add roster form" className="rounded-md p-1 text-slate-500 hover:bg-white dark:hover:bg-slate-800"><X className="h-4 w-4" /></button>
           </div>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-6">
-            {([['district', 'District name', 'e.g. Kampala'], ['school', 'School name', 'e.g. Kansaga Primary'], ['subject', 'Subject', 'e.g. Social Studies'], ['pupils', 'Pupils', 'e.g. 450'], ['required', 'Required teachers', 'e.g. 4'], ['available', 'Available teachers', 'e.g. 2'], ['km', 'Distance (km)', 'e.g. 5']] as const).map(([field, label, placeholder]) => (
-              <label key={field} className={field === 'school' || field === 'subject' ? 'sm:col-span-2' : ''}>
+            <label>
+              <span className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">District</span>
+              <select required value={form.district} onChange={(event) => update('district', event.target.value)} className="h-9 w-full rounded-md border border-slate-300 bg-white px-2.5 text-sm text-slate-900 outline-none focus:border-teal-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
+                <option value="">Choose district</option>
+                {districts.map((district) => <option key={district} value={district}>{district}</option>)}
+              </select>
+            </label>
+            <label className="sm:col-span-2">
+              <span className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">School name</span>
+              <input required value={form.school} onChange={(event) => update('school', event.target.value)} placeholder="e.g. Kansaga Primary" className="h-9 w-full rounded-md border border-slate-300 bg-white px-2.5 text-sm text-slate-900 outline-none focus:border-teal-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white" />
+            </label>
+            <label className="sm:col-span-2">
+              <span className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">Subject</span>
+              <select required value={form.subject} onChange={(event) => update('subject', event.target.value)} className="h-9 w-full rounded-md border border-slate-300 bg-white px-2.5 text-sm text-slate-900 outline-none focus:border-teal-500 dark:border-slate-700 dark:bg-slate-900 dark:text-white">
+                {subjects.map((subject) => <option key={subject} value={subject}>{subject}</option>)}
+              </select>
+            </label>
+            {([['pupils', 'Pupils', 'e.g. 450'], ['required', 'Required teachers', 'e.g. 4'], ['available', 'Available teachers', 'e.g. 2'], ['km', 'Distance (km)', 'e.g. 5']] as const).map(([field, label, placeholder]) => (
+              <label key={field}>
                 <span className="mb-1 block text-xs font-semibold text-slate-700 dark:text-slate-300">{label}</span>
-                <input required={['district', 'school', 'subject', 'required', 'available'].includes(field)} type={['pupils', 'required', 'available', 'km'].includes(field) ? 'number' : 'text'} min="0" value={form[field]} onChange={(event) => update(field, event.target.value)} placeholder={placeholder} className="h-9 w-full rounded-md border border-slate-300 bg-white px-2.5 text-sm text-slate-900 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white" />
+                <input required={['required', 'available'].includes(field)} type="number" min="0" value={form[field]} onChange={(event) => update(field, event.target.value)} placeholder={placeholder} className="h-9 w-full rounded-md border border-slate-300 bg-white px-2.5 text-sm text-slate-900 outline-none focus:border-teal-500 focus:ring-2 focus:ring-teal-500/20 dark:border-slate-700 dark:bg-slate-900 dark:text-white" />
               </label>
             ))}
           </div>

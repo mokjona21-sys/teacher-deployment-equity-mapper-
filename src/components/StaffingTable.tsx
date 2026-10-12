@@ -18,7 +18,7 @@ interface StaffingTableProps {
   onResetFilters: () => void;
 }
 
-type SortField = 'school' | 'district' | 'teacher' | 'subject' | 'required' | 'available' | 'gap' | 'km';
+type SortField = 'school' | 'district' | 'subject' | 'required' | 'available' | 'gap' | 'km';
 type SortDirection = 'asc' | 'desc';
 
 export const StaffingTable: React.FC<StaffingTableProps> = ({
@@ -46,7 +46,6 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
     let comp = 0;
     if (sortField === 'school') comp = a.school.localeCompare(b.school);
     else if (sortField === 'district') comp = a.district.localeCompare(b.district);
-    else if (sortField === 'teacher') comp = (a.teacherName ?? '').localeCompare(b.teacherName ?? '');
     else if (sortField === 'subject') comp = a.subject.localeCompare(b.subject);
     else if (sortField === 'required') comp = a.required - b.required;
     else if (sortField === 'available') comp = a.available - b.available;
@@ -93,15 +92,6 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
                   className="flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors text-left"
                 >
                   <span>District</span>
-                  <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
-                </button>
-              </th>
-              <th className="py-3 px-3">
-                <button
-                  onClick={() => handleSort('teacher')}
-                  className="flex items-center gap-1.5 hover:text-slate-900 dark:hover:text-white transition-colors text-left"
-                >
-                  <span>Teacher Name</span>
                   <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
                 </button>
               </th>
@@ -182,11 +172,6 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
                     {/* District */}
                     <td className="py-3 px-3 text-slate-600 dark:text-slate-400 whitespace-nowrap">
                       {r.district}
-                    </td>
-
-                    {/* Teacher Name */}
-                    <td className="py-3 px-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">
-                      {r.teacherName ?? 'Not assigned'}
                     </td>
 
                     {/* Subject */}

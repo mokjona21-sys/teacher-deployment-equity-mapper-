@@ -509,21 +509,23 @@ function App() {
     });
   }, []);
 
-  async function handleLogin(email: string, password: string) {
-    const authApi = window.teacherEquityAuth;
-    if (authApi) {
-      await authApi.signInWithEmailAndPassword(authApi.auth, email, password);
+  async function handleLogin(username: string, password: string) {
+    const expectedUser = import.meta.env.vite_app_name || 'Mapper';
+    const expectedPass = import.meta.env.vite_app_password || '1234';
+
+    if (username === expectedUser && password === expectedPass) {
+      localStorage.setItem('teacher-equity-authenticated', 'true');
+      setUser({ preview: true });
       return;
     }
 
-    const expectedUser = import.meta.env.vite_app_name || 'Mapper';
-    const expectedPass = import.meta.env.vite_app_password || '1234';
-    if (email !== expectedUser || password !== expectedPass) {
-      throw new Error('Invalid credentials');
+    const authApi = window.teacherEquityAuth;
+    if (authApi) {
+      await authApi.signInWithEmailAndPassword(authApi.auth, username, password);
+      return;
     }
 
-    localStorage.setItem('teacher-equity-authenticated', 'true');
-    setUser({ preview: true });
+    throw new Error('Invalid username or password');
   }
 
   async function handleLogout() {

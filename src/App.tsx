@@ -28,7 +28,7 @@ import { VisualizationsView } from './components/VisualizationsView';
 import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
-import { EntityManagementView } from './components/EntityManagementView';
+import { EntityManagementView, INITIAL_ENTITIES, Entity } from './components/EntityManagementView';
 import { FAQView } from './components/FAQView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 import { LoginPage } from './components/LoginPage';
@@ -66,7 +66,21 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
   // School dataset state (with support for live in-memory redeployment simulations)
   const [records, setRecords] = useState<SchoolRecord[]>(INITIAL_RECORDS);
+  const [directoryEntities, setDirectoryEntities] = useState<Entity[]>(() => {
+    if (typeof window === 'undefined') return INITIAL_ENTITIES;
+    const saved = localStorage.getItem('edumap_directory_entities');
+    if (!saved) return INITIAL_ENTITIES;
+    try {
+      return JSON.parse(saved) as Entity[];
+    } catch {
+      return INITIAL_ENTITIES;
+    }
+  });
   const [isSimulated, setIsSimulated] = useState<boolean>(false);
+
+  useEffect(() => {
+    localStorage.setItem('edumap_directory_entities', JSON.stringify(directoryEntities));
+  }, [directoryEntities]);
 
   // Inspected school for detail modal
   const [selectedSchool, setSelectedSchool] = useState<SchoolRecord | null>(null);
@@ -478,7 +492,7 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           {currentView === 'features' && (
             <div className="flex flex-col gap-10">
               <FeaturesView onNavigate={setCurrentView} />
-              <EntityManagementView />
+              <EntityManagementView entities={directoryEntities} onEntitiesChange={setDirectoryEntities} />
             </div>
           )}
 

@@ -3,7 +3,7 @@ import { Building2, Check, GraduationCap, MapPinned, Plus, Search, Trash2, Users
 
 type EntityType = 'district' | 'school' | 'teacher';
 
-type Entity = {
+export type Entity = {
   id: string;
   type: EntityType;
   name: string;
@@ -11,7 +11,7 @@ type Entity = {
   meta: string;
 };
 
-const INITIAL_ENTITIES: Entity[] = [
+export const INITIAL_ENTITIES: Entity[] = [
   { id: 'd-1', type: 'district', name: 'North Valley District', detail: 'NVD-001', meta: '4 schools' },
   { id: 'd-2', type: 'district', name: 'Lakeside District', detail: 'LSD-014', meta: '3 schools' },
   { id: 's-1', type: 'school', name: 'North Valley High School', detail: 'North Valley District', meta: '842 students' },
@@ -26,8 +26,12 @@ const TYPE_META: Record<EntityType, { label: string; singular: string; icon: typ
   teacher: { label: 'Teachers', singular: 'Teacher', icon: GraduationCap },
 };
 
-export const EntityManagementView: React.FC = () => {
-  const [entities, setEntities] = useState<Entity[]>(INITIAL_ENTITIES);
+type EntityManagementViewProps = {
+  entities: Entity[];
+  onEntitiesChange: (entities: Entity[]) => void;
+};
+
+export const EntityManagementView: React.FC<EntityManagementViewProps> = ({ entities, onEntitiesChange }) => {
   const [activeType, setActiveType] = useState<EntityType>('district');
   const [search, setSearch] = useState('');
   const [form, setForm] = useState({ name: '', detail: '', meta: '' });
@@ -38,13 +42,13 @@ export const EntityManagementView: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     if (!form.name.trim() || !form.detail.trim()) return;
-    setEntities((current) => [{ id: `${activeType}-${Date.now()}`, type: activeType, name: form.name.trim(), detail: form.detail.trim(), meta: form.meta.trim() || 'Active' }, ...current]);
+    onEntitiesChange([{ id: `${activeType}-${Date.now()}`, type: activeType, name: form.name.trim(), detail: form.detail.trim(), meta: form.meta.trim() || 'Active' }, ...entities]);
     setForm({ name: '', detail: '', meta: '' });
     setSaved(true);
     window.setTimeout(() => setSaved(false), 2400);
   };
 
-  const removeEntity = (id: string) => setEntities((current) => current.filter((entity) => entity.id !== id));
+  const removeEntity = (id: string) => onEntitiesChange(entities.filter((entity) => entity.id !== id));
   const ActiveIcon = TYPE_META[activeType].icon;
 
   return (

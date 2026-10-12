@@ -10,6 +10,8 @@ app.use(express.json({ limit: '32kb' }));
 app.post('/api/assistant', async (req, res) => {
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   const context = typeof req.body?.context === 'string' ? req.body.context.slice(0, 12000) : '';
+  res.setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-AI-Provider', 'Vercel AI Gateway');
 
   if (!question || question.length > 500) {
     res.status(400).json({ error: 'Enter a question up to 500 characters.' });
@@ -21,7 +23,7 @@ app.post('/api/assistant', async (req, res) => {
     res.json({ answer });
   } catch (error) {
     console.error('[v0] Assistant request failed:', error);
-    res.status(500).json({ error: 'The assistant is temporarily unavailable.' });
+    res.status(503).json({ error: 'The AI Gateway is temporarily unavailable. Please try again.' });
   }
 });
 const httpServer = createHttpServer(app);

@@ -1,5 +1,8 @@
 import { generateText } from 'ai';
 
+const ASSISTANT_MODEL = 'openai/gpt-oss-120b';
+const ASSISTANT_MAX_OUTPUT_TOKENS = 600;
+
 const ASSISTANT_SYSTEM_PROMPT = `You are Mapper Assistant, the built-in analyst for the Teacher Deployment Equity Mapper.
 
 Your only job is to explain how this system works and analyze the teacher staffing data supplied in the dashboard context. Stay strictly within these topics:
@@ -18,9 +21,11 @@ Safety and accuracy rules:
 
 export async function answerAssistantQuestion(question: string, context: string) {
   const result = await generateText({
-    model: 'openai/gpt-oss-120b',
+    // Plain provider/model IDs route through Vercel AI Gateway.
+    model: ASSISTANT_MODEL,
     system: ASSISTANT_SYSTEM_PROMPT,
     prompt: `CURRENT DASHBOARD CONTEXT (authoritative; may be filtered):\n${context || 'No dashboard context was supplied.'}\n\nUSER QUESTION:\n${question}`,
+    maxOutputTokens: ASSISTANT_MAX_OUTPUT_TOKENS,
     temperature: 0.1,
   });
 

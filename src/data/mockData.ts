@@ -49,6 +49,16 @@ export const INITIAL_RECORDS: SchoolRecord[] = [
   { id: 'mu-m-2', school: 'Seeta Primary', district: 'Mukono', subject: 'Mathematics', required: 4, available: 5, km: 11, studentCount: 430, coordinates: { x: 62, y: 32 } },
   { id: 'mu-m-3', school: 'Kyetume Memorial', district: 'Mukono', subject: 'Mathematics', required: 4, available: 2, km: 15, studentCount: 340, coordinates: { x: 76, y: 30 } },
 
+  // Kampala District - Social Studies and other schools
+  { id: 'ka-ss-1', school: 'Kansaga Primary School', district: 'Kampala', subject: 'Social Studies', required: 4, available: 2, km: 4, studentCount: 610, coordinates: { x: 58, y: 52 } },
+  { id: 'ka-ss-2', school: 'Kampala Central Primary', district: 'Kampala', subject: 'Social Studies', required: 5, available: 6, km: 3, studentCount: 720, coordinates: { x: 57, y: 43 } },
+  { id: 'ka-ss-3', school: 'Nakivubo Primary School', district: 'Kampala', subject: 'Social Studies', required: 4, available: 4, km: 5, studentCount: 540, coordinates: { x: 61, y: 45 } },
+  { id: 'ka-ss-4', school: 'Makerere Primary School', district: 'Kampala', subject: 'Social Studies', required: 5, available: 3, km: 7, studentCount: 680, coordinates: { x: 53, y: 38 } },
+  { id: 'ka-m-1', school: 'Kansaga Primary School', district: 'Kampala', subject: 'Mathematics', required: 5, available: 4, km: 4, studentCount: 610, coordinates: { x: 58, y: 52 } },
+  { id: 'ka-m-2', school: 'Kampala Central Primary', district: 'Kampala', subject: 'Mathematics', required: 6, available: 6, km: 3, studentCount: 720, coordinates: { x: 57, y: 43 } },
+  { id: 'ka-e-1', school: 'Nakivubo Primary School', district: 'Kampala', subject: 'English', required: 5, available: 4, km: 5, studentCount: 540, coordinates: { x: 61, y: 45 } },
+  { id: 'ka-e-2', school: 'Makerere Primary School', district: 'Kampala', subject: 'English', required: 5, available: 6, km: 7, studentCount: 680, coordinates: { x: 53, y: 38 } },
+
   // Luweero District - Mathematics & Science
   { id: 'lu-m-1', school: 'Wobulenzi Public', district: 'Luweero', subject: 'Mathematics', required: 4, available: 2, km: 12, studentCount: 410, coordinates: { x: 45, y: 12 } },
   { id: 'lu-m-2', school: 'Luweero Boys Primary', district: 'Luweero', subject: 'Mathematics', required: 4, available: 5, km: 8, studentCount: 430, coordinates: { x: 48, y: 8 } },
@@ -63,4 +73,5 @@ export const DISTRICT_METADATA: Record<string, { centerName: string; region: str
   Mpigi: { centerName: 'Mpigi Boma Ground', region: 'South Central', targetRatio: 1.0 },
   Mukono: { centerName: 'Mukono Municipal Council', region: 'East Central', targetRatio: 1.0 },
   Luweero: { centerName: 'Luweero District Complex', region: 'North Central', targetRatio: 1.0 },
+  Kampala: { centerName: 'Kampala City Hall', region: 'Central Uganda', targetRatio: 1.0 },
 };

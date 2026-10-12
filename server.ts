@@ -11,6 +11,7 @@ app.use(express.json({ limit: '48kb' }));
 
 app.post('/api/assistant', async (req, res) => {
   res.type('application/json').setHeader('Cache-Control', 'no-store');
+  res.setHeader('X-Content-Type-Options', 'nosniff');
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   const context = typeof req.body?.context === 'string' ? req.body.context.slice(0, 24000) : '';
 

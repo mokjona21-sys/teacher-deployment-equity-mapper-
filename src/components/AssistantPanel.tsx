@@ -36,13 +36,17 @@ export function AssistantPanel({ context, onClose }: AssistantPanelProps) {
         body: JSON.stringify({ question: trimmed, context }),
       });
       const text = await response.text();
-      let payload: { answer?: string; error?: string };
-      try {
-        payload = JSON.parse(text) as { answer?: string; error?: string };
-      } catch {
-        throw new Error('The assistant service returned an invalid response. Please try again.');
+      let payload: { answer?: string; error?: string } = {};
+      const contentType = response.headers.get('content-type') ?? '';
+      if (text.trim()) {
+        try {
+          payload = JSON.parse(text) as { answer?: string; error?: string };
+        } catch {
+          const isHtml = contentType.includes('text/html') || /^\s*<!doctype html/i.test(text);
+          throw new Error(isHtml ? 'The assistant API route is unavailable in this deployment. Redeploy the latest server code and try again.' : 'The assistant returned an invalid response. Please try again.');
+        }
       }
-      if (!response.ok) throw new Error(payload.error ?? 'The assistant could not respond.');
+      if (!response.ok) throw new Error(payload.error ?? `The assistant request failed (${response.status}).`);
       if (!payload.answer) throw new Error('The assistant returned an empty response.');
       setMessages((current) => [...current, { id: nextId.current++, role: 'assistant', content: payload.answer! }]);
     } catch (requestError) {

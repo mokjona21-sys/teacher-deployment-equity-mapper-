@@ -94,19 +94,31 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
     maxDistance: 30,
   });
 
-  // Unique dropdown lists
-  const districts = useMemo(() => {
-    return [...new Set(INITIAL_RECORDS.map((r) => r.district))].sort();
-  }, []);
+  const directoryRecords = useMemo<SchoolRecord[]>(() => directoryEntities
+    .filter((entity) => entity.type === 'school')
+    .map((entity, index) => ({
+      id: `directory-${entity.id}`,
+      school: entity.name,
+      district: entity.detail,
+      subject: 'General Staffing',
+      required: 1,
+      available: 1,
+      km: 0,
+      studentCount: Number.parseInt(entity.meta.replace(/[^0-9]/g, ''), 10) || undefined,
+      coordinates: { x: 50 + (index % 5) * 4, y: 50 + (index % 4) * 4 },
+    })), [directoryEntities]);
 
-  const subjects = useMemo(() => {
-    return [...new Set(INITIAL_RECORDS.map((r) => r.subject))].sort();
-  }, []);
+  const combinedRecords = useMemo(() => {
+    const knownSchools = new Set(records.map((record) => record.school));
+    return [...records, ...directoryRecords.filter((record) => !knownSchools.has(record.school))];
+  }, [directoryRecords, records]);
 
-  // Filtered dataset based on user criteria
-  const filteredRecords = useMemo(() => {
-    return filterRecords(records, filters);
-  }, [records, filters]);
+  // Unique dropdown lists include records created in the directory.
+  const districts = useMemo(() => [...new Set(combinedRecords.map((record) => record.district))].sort(), [combinedRecords]);
+  const subjects = useMemo(() => [...new Set(combinedRecords.map((record) => record.subject))].sort(), [combinedRecords]);
+
+  // Filtered dataset based on current and directory-created records.
+  const filteredRecords = useMemo(() => filterRecords(combinedRecords, filters), [combinedRecords, filters]);
 
   // Algorithmic redeployment moves based on current records and distance threshold
   const recommendations = useMemo(() => {
@@ -114,8 +126,8 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   }, [filteredRecords, filters.maxDistance]);
 
   const allMapTransfers = useMemo(() => {
-    return generateRecommendations(records, filters.maxDistance);
-  }, [records, filters.maxDistance]);
+    return generateRecommendations(combinedRecords, filters.maxDistance);
+  }, [combinedRecords, filters.maxDistance]);
 
   // Key KPI metrics
   const metrics = useMemo(() => {
@@ -470,7 +482,7 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
           {currentView === 'map' && (
             <DistrictMapView
-              records={records}
+              records={combinedRecords}
               moves={allMapTransfers}
               onSelectSchool={setSelectedSchool}
               selectedDistrict={filters.district}

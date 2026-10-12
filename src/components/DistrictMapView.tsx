@@ -13,8 +13,8 @@ interface DistrictMapViewProps {
   onDistrictSelect: (district: string) => void;
 }
 
-const mapBounds: [[number, number], [number, number]] = [[0.05, 32.05], [0.65, 33.35]];
-const defaultCenter: [number, number] = [0.35, 32.65];
+const mapBounds: [[number, number], [number, number]] = [[-1.5, 29.5], [4.3, 35.1]];
+const defaultCenter: [number, number] = [1.37, 32.3];
 
 const markerIcon = (status: 'shortage' | 'surplus' | 'balanced') => L.divIcon({
   className: 'bg-transparent border-0',
@@ -55,7 +55,7 @@ export const DistrictMapView: React.FC<DistrictMapViewProps> = ({ records, moves
         <label className="flex items-center gap-2 text-xs font-medium text-slate-600 dark:text-slate-300"><input type="checkbox" checked={showTransitLines} onChange={(event) => setShowTransitLines(event.target.checked)} className="rounded-sm text-teal-600 focus:ring-teal-500" /> Show transfer routes</label>
       </div>
       <div className="overflow-hidden rounded-xl border border-slate-200/90 shadow-sm dark:border-slate-800">
-        <MapContainer center={defaultCenter} zoom={9} minZoom={8} maxZoom={15} maxBounds={mapBounds} className="h-[560px] w-full" scrollWheelZoom>
+        <MapContainer center={defaultCenter} zoom={7} minZoom={6} maxZoom={15} maxBounds={mapBounds} className="h-[560px] w-full" scrollWheelZoom>
           <TileLayer attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
           <MapViewport records={uniqueSchools} />
           {showTransitLines && visibleMoves.map((move) => {
@@ -71,7 +71,7 @@ export const DistrictMapView: React.FC<DistrictMapViewProps> = ({ records, moves
           })}
         </MapContainer>
       </div>
-      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 dark:text-slate-300"><span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-5 border-t-2 border-dashed border-teal-600" />{visibleMoves.length} transfer routes</span><span className="font-semibold">District focus:</span>{['All', ...Array.from(new Set(records.map((record) => record.district)))].map((district) => <button key={district} onClick={() => onDistrictSelect(district === 'All' ? 'All Districts' : district)} className={`rounded-full border px-3 py-1 ${selectedDistrict === district || (district === 'All' && selectedDistrict === 'All Districts') ? 'border-teal-600 bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300' : 'border-slate-200 dark:border-slate-700'}`}>{district}</button>)}</div>
+      <div className="flex flex-wrap items-center gap-3 text-xs text-slate-600 dark:text-slate-300"><span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-5 border-t-2 border-dashed border-teal-600" />{visibleMoves.length} transfer routes</span><span className="font-semibold">District focus:</span>{['All', ...Array.from(new Set(records.map((record) => record.district)))].sort().map((district) => <button key={district} onClick={() => onDistrictSelect(district === 'All' ? 'All Districts' : district)} className={`rounded-full border px-3 py-1 ${selectedDistrict === district || (district === 'All' && selectedDistrict === 'All Districts') ? 'border-teal-600 bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-300' : 'border-slate-200 dark:border-slate-700'}`}>{district}</button>)}</div>
     </div>
   );
 };

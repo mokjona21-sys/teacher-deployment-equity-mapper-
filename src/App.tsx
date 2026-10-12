@@ -4,6 +4,7 @@
  */
 
 import React, { useEffect, useState, useMemo } from 'react';
+import { Analytics } from '@vercel/analytics/react';
 import { 
   SchoolRecord, 
   RedeploymentMove, 
@@ -537,6 +538,7 @@ function App() {
   return (
     <AppErrorBoundary>
       <DashboardApp onLogout={() => signOut(firebaseAuth)} />
+      <Analytics />
     </AppErrorBoundary>
   );
 }

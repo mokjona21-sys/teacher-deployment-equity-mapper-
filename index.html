@@ -15,23 +15,6 @@
 </head>
 <body class="bg-slate-50 text-slate-900 antialiased selection:bg-teal-500/20 selection:text-teal-900 dark:bg-slate-950">
   <div id="root"></div>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/13.0.0/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-      authDomain: "teacher-equity.firebaseapp.com",
-      projectId: "teacher-equity",
-      storageBucket: "teacher-equity.firebasestorage.app",
-      messagingSenderId: "859100924582",
-      appId: "1:859100924582:web:817f764401808721700267",
-      measurementId: "G-BRGKLKXQYF"
-    };
-
-    const auth = getAuth(initializeApp(firebaseConfig));
-    window.teacherEquityAuth = { auth, onAuthStateChanged, signInWithEmailAndPassword, signOut };
-  </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>
 </html>

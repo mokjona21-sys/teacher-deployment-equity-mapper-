@@ -30,9 +30,7 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
-import { LoginPage } from './components/LoginPage';
-
-function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
+function DashboardApp() {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -279,7 +277,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           onToggleDark={() => setIsDark(!isDark)}
           onExportCSV={handleExportCSV}
           onNavigateToRedeployment={() => setCurrentView('redeployment')}
-          onLogout={onLogout}
           feasibleMovesCount={metrics.totalFeasibleMoves}
           />
 
@@ -491,55 +488,35 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   );
 }
 
+class AppErrorBoundary extends React.Component<React.PropsWithChildren, { error: Error | null }> {
+  state: { error: Error | null } = { error: null };
+
+  static getDerivedStateFromError(error: Error) {
+    return { error };
+  }
+
+  render() {
+    if (this.state.error) {
+      return (
+        <main className="flex min-h-screen items-center justify-center bg-slate-50 p-6 text-slate-900 dark:bg-slate-950 dark:text-white">
+          <section className="w-full max-w-lg rounded-2xl border border-rose-200 bg-white p-6 shadow-sm dark:border-rose-900 dark:bg-slate-900">
+            <h1 className="text-lg font-bold">Dashboard could not load</h1>
+            <p className="mt-2 text-sm text-slate-600 dark:text-slate-300">{this.state.error.message}</p>
+          </section>
+        </main>
+      );
+    }
+
+    return this.props.children;
+  }
+}
+
 function App() {
-  const [user, setUser] = useState<unknown>(null);
-  const [authReady, setAuthReady] = useState(false);
-
-  useEffect(() => {
-    const authApi = window.teacherEquityAuth;
-    if (!authApi) {
-      setUser(localStorage.getItem('teacher-equity-authenticated') === 'true' ? { preview: true } : null);
-      setAuthReady(true);
-      return;
-    }
-
-    return authApi.onAuthStateChanged(authApi.auth, (nextUser) => {
-      setUser(nextUser);
-      setAuthReady(true);
-    });
-  }, []);
-
-  async function handleLogin(username: string, password: string) {
-    const expectedUser = import.meta.env.vite_app_name || 'Mapper';
-    const expectedPass = import.meta.env.vite_app_password || '1234';
-
-    if (username === expectedUser && password === expectedPass) {
-      localStorage.setItem('teacher-equity-authenticated', 'true');
-      setUser({ preview: true });
-      return;
-    }
-
-    const authApi = window.teacherEquityAuth;
-    if (authApi) {
-      await authApi.signInWithEmailAndPassword(authApi.auth, username, password);
-      return;
-    }
-
-    throw new Error('Invalid username or password');
-  }
-
-  async function handleLogout() {
-    const authApi = window.teacherEquityAuth;
-    if (authApi) await authApi.signOut(authApi.auth);
-    localStorage.removeItem('teacher-equity-authenticated');
-    setUser(null);
-  }
-
-  if (!authReady) {
-    return <div className="min-h-screen bg-slate-50 dark:bg-slate-950" aria-label="Loading authentication" />;
-  }
-
-  return user ? <DashboardApp onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />;
+  return (
+    <AppErrorBoundary>
+      <DashboardApp />
+    </AppErrorBoundary>
+  );
 }
 
 export default App;

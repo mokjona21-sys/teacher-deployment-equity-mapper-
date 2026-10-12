@@ -10,12 +10,14 @@ import {
   MapPin
 } from 'lucide-react';
 import { SchoolRecord } from '../types';
+import { AddRosterRecordForm } from './AddRosterRecordForm';
 
 interface StaffingTableProps {
   records: SchoolRecord[];
   onSelectSchool: (school: SchoolRecord) => void;
   onAdjustStaffing: (id: string, delta: number) => void;
   onResetFilters: () => void;
+  onAddRecord: (record: SchoolRecord) => void;
 }
 
 type SortField = 'school' | 'district' | 'subject' | 'required' | 'available' | 'gap' | 'km';
@@ -26,6 +28,7 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
   onSelectSchool,
   onAdjustStaffing,
   onResetFilters,
+  onAddRecord,
 }) => {
   const [sortField, setSortField] = useState<SortField>('gap');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
@@ -40,6 +43,7 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
   };
 
   const sortedRecords = [...records].sort((a, b) => {
+    if (a.isNew !== b.isNew) return a.isNew ? 1 : -1;
     const gapA = a.required - a.available;
     const gapB = b.required - b.available;
 
@@ -64,13 +68,15 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
             School Staffing Roster
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Net Gap = Required − Available. Positive values indicate a deficit requiring deployment.
+            Status and Net Gap update automatically from Required − Available. Simulate and Inspect use the current row data.
           </p>
         </div>
         <div className="text-xs text-slate-500 dark:text-slate-400 font-mono tabular-nums">
           Showing {records.length} schools
         </div>
       </div>
+
+      <AddRosterRecordForm onAdd={onAddRecord} />
 
       {/* Table Content */}
       <div className="overflow-x-auto">

@@ -82,7 +82,7 @@ export const FilterToolbar: React.FC<FilterToolbarProps> = ({
             htmlFor="directory-search"
             className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1.5"
           >
-Search School, District, or Teacher
+Search School or District
           </label>
           <div className="relative">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -91,14 +91,14 @@ Search School, District, or Teacher
               type="text"
               value={filters.search}
               onChange={(e) => onFilterChange({ ...filters, search: e.target.value })}
-              placeholder="e.g. Kansaga, Kampala, or teacher name..."
+              placeholder="e.g. Kansaga or Kampala..."
               className="w-full pl-9 pr-8 py-2 text-sm rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:border-teal-500 focus:ring-1 focus:ring-teal-500 transition-colors"
             />
             {filters.search && (
               <button
                 onClick={() => onFilterChange({ ...filters, search: '' })}
                 className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200"
-                aria-label="Clear school, district, or teacher search"
+                aria-label="Clear school or district search"
               >
                 <X className="w-4 h-4" />
               </button>

@@ -33,8 +33,7 @@ export function filterRecords(records: SchoolRecord[], filters: FilterState): Sc
       const matchSchool = r.school.toLowerCase().includes(q);
       const matchDistrict = r.district.toLowerCase().includes(q);
       const matchSubject = r.subject.toLowerCase().includes(q);
-      const matchTeacher = r.teacherName?.toLowerCase().includes(q) ?? false;
-      if (!matchSchool && !matchDistrict && !matchSubject && !matchTeacher) return false;
+      if (!matchSchool && !matchDistrict && !matchSubject) return false;
     }
     const gap = r.required - r.available;
     if (filters.status === 'shortage' && gap <= 0) return false;

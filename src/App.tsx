@@ -125,6 +125,11 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
     });
   };
 
+  const handleAddRecord = (record: SchoolRecord) => {
+    setRecords((previous) => [...previous, record]);
+    handleResetFilters();
+  };
+
   // Adjust staffing (+1 / -1) for interactive scenario planning
   const handleAdjustStaffing = (id: string, delta: number) => {
     setRecords((prev) =>
@@ -324,9 +329,10 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
                   <StaffingTable
                     records={filteredRecords}
                     onSelectSchool={setSelectedSchool}
-                    onAdjustStaffing={handleAdjustStaffing}
-                    onResetFilters={handleResetFilters}
-                  />
+  onAdjustStaffing={handleAdjustStaffing}
+  onResetFilters={handleResetFilters}
+  onAddRecord={handleAddRecord}
+  />
                 </div>
 
                 <div className="space-y-6">
@@ -417,14 +423,15 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
             </div>
           )}
 
-          {currentView === 'roster' && (
-            <StaffingTable
-              records={filteredRecords}
-              onSelectSchool={setSelectedSchool}
-              onAdjustStaffing={handleAdjustStaffing}
-              onResetFilters={handleResetFilters}
-            />
-          )}
+  {currentView === 'roster' && (
+  <StaffingTable
+  records={filteredRecords}
+  onSelectSchool={setSelectedSchool}
+  onAdjustStaffing={handleAdjustStaffing}
+  onResetFilters={handleResetFilters}
+  onAddRecord={handleAddRecord}
+  />
+  )}
 
           {currentView === 'redeployment' && (
             <RedeploymentView

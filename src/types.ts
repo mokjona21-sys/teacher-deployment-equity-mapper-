@@ -3,6 +3,7 @@ export interface SchoolRecord {
   school: string;
   district: string;
   subject: string;
+  teacherName?: string;
   required: number;
   available: number;
   km: number; // Approximate distance from district center (km)

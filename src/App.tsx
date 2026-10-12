@@ -492,13 +492,12 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           <button
             type="button"
             onClick={() => setIsAssistantOpen((open) => !open)}
-            className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-teal-600 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-teal-700 hover:shadow-xl"
+            className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-teal-600 text-white shadow-lg shadow-teal-950/20 transition hover:scale-105 hover:bg-teal-700 hover:shadow-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
             aria-expanded={isAssistantOpen}
             aria-controls="mapper-assistant-panel"
             aria-label={isAssistantOpen ? 'Close Mapper Assistant' : 'Open Mapper Assistant'}
           >
-            <Bot className="h-4 w-4" />
-            <span className="hidden sm:inline">Mapper Assistant</span>
+            <Bot className="h-5 w-5" />
           </button>
           {isAssistantOpen && <AssistantPanel context={assistantContext} onClose={() => setIsAssistantOpen(false)} />}
         </>

@@ -28,7 +28,6 @@ import { VisualizationsView } from './components/VisualizationsView';
 import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
-import { EntityManagementView } from './components/EntityManagementView';
 import { FAQView } from './components/FAQView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 import { LoginPage } from './components/LoginPage';
@@ -66,6 +65,9 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
   // School dataset state (with support for live in-memory redeployment simulations)
   const [records, setRecords] = useState<SchoolRecord[]>(INITIAL_RECORDS);
+  useEffect(() => {
+    localStorage.removeItem('edumap_directory_entities');
+  }, []);
   const [isSimulated, setIsSimulated] = useState<boolean>(false);
 
   // Inspected school for detail modal
@@ -80,19 +82,14 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
     maxDistance: 30,
   });
 
-  // Unique dropdown lists
-  const districts = useMemo(() => {
-    return [...new Set(INITIAL_RECORDS.map((r) => r.district))].sort();
-  }, []);
+  const combinedRecords = records;
 
-  const subjects = useMemo(() => {
-    return [...new Set(INITIAL_RECORDS.map((r) => r.subject))].sort();
-  }, []);
+  // Unique dropdown lists include only verified dashboard records.
+  const districts = useMemo(() => [...new Set(combinedRecords.map((record) => record.district))].filter((district) => !['Lake', 'Lakeside', 'North', 'North Valley'].includes(district)).sort(), [combinedRecords]);
+  const subjects = useMemo(() => [...new Set(combinedRecords.map((record) => record.subject))].filter((subject) => subject !== 'General Staffing').sort(), [combinedRecords]);
 
-  // Filtered dataset based on user criteria
-  const filteredRecords = useMemo(() => {
-    return filterRecords(records, filters);
-  }, [records, filters]);
+  // Filtered dataset based on current and directory-created records.
+  const filteredRecords = useMemo(() => filterRecords(combinedRecords, filters), [combinedRecords, filters]);
 
   // Algorithmic redeployment moves based on current records and distance threshold
   const recommendations = useMemo(() => {
@@ -100,8 +97,8 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   }, [filteredRecords, filters.maxDistance]);
 
   const allMapTransfers = useMemo(() => {
-    return generateRecommendations(records, filters.maxDistance);
-  }, [records, filters.maxDistance]);
+    return generateRecommendations(combinedRecords, filters.maxDistance);
+  }, [combinedRecords, filters.maxDistance]);
 
   // Key KPI metrics
   const metrics = useMemo(() => {
@@ -456,7 +453,7 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
           {currentView === 'map' && (
             <DistrictMapView
-              records={records}
+              records={combinedRecords}
               moves={allMapTransfers}
               onSelectSchool={setSelectedSchool}
               selectedDistrict={filters.district}
@@ -478,7 +475,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           {currentView === 'features' && (
             <div className="flex flex-col gap-10">
               <FeaturesView onNavigate={setCurrentView} />
-              <EntityManagementView />
             </div>
           )}
 

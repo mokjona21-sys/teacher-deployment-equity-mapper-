@@ -6,8 +6,7 @@ import {
   Sun,
   Moon,
   Compass,
-  LogOut,
-  Bot
+  LogOut
 } from 'lucide-react';
 import { ViewMode } from '../types';
 
@@ -20,8 +19,6 @@ interface HeaderProps {
   onNavigateToRedeployment: () => void;
   feasibleMovesCount: number;
   onLogout: () => Promise<void>;
-  isAssistantOpen: boolean;
-  onToggleAssistant: () => void;
 }
 
 const VIEW_TITLES: Record<ViewMode, { title: string; subtitle: string }> = {
@@ -64,8 +61,6 @@ export const Header: React.FC<HeaderProps> = ({
   onNavigateToRedeployment,
   feasibleMovesCount,
   onLogout,
-  isAssistantOpen,
-  onToggleAssistant,
 }) => {
   const currentMeta = VIEW_TITLES[currentView] || VIEW_TITLES.overview;
 
@@ -133,17 +128,6 @@ export const Header: React.FC<HeaderProps> = ({
         >
           <LogOut className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Sign out</span>
-        </button>
-
-        <button
-          onClick={onToggleAssistant}
-          className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-teal-600 text-white shadow-sm transition hover:scale-105 hover:bg-teal-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-slate-950"
-          aria-expanded={isAssistantOpen}
-          aria-controls="mapper-assistant-panel"
-          aria-label={isAssistantOpen ? 'Close Mapper Assistant' : 'Open Mapper Assistant'}
-          title="Mapper Assistant"
-        >
-          <Bot className="h-4 w-4" />
         </button>
 
         <button

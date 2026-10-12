@@ -30,7 +30,9 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
-function DashboardApp() {
+import { LoginPage } from './components/LoginPage';
+
+function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -277,6 +279,7 @@ function DashboardApp() {
           onToggleDark={() => setIsDark(!isDark)}
           onExportCSV={handleExportCSV}
           onNavigateToRedeployment={() => setCurrentView('redeployment')}
+          onLogout={onLogout}
           feasibleMovesCount={metrics.totalFeasibleMoves}
           />
 
@@ -489,7 +492,39 @@ function DashboardApp() {
 }
 
 function App() {
-  return <DashboardApp />;
+  const [user, setUser] = useState<unknown>(null);
+  const [authReady, setAuthReady] = useState(false);
+
+  useEffect(() => {
+    const authApi = window.teacherEquityAuth;
+    if (!authApi) {
+      setAuthReady(true);
+      return;
+    }
+
+    return authApi.onAuthStateChanged(authApi.auth, (nextUser) => {
+      setUser(nextUser);
+      setAuthReady(true);
+    });
+  }, []);
+
+  async function handleLogin(email: string, password: string) {
+    const authApi = window.teacherEquityAuth;
+    if (!authApi) throw new Error('Firebase authentication is not configured.');
+    await authApi.signInWithEmailAndPassword(authApi.auth, email, password);
+  }
+
+  async function handleLogout() {
+    const authApi = window.teacherEquityAuth;
+    if (authApi) await authApi.signOut(authApi.auth);
+    setUser(null);
+  }
+
+  if (!authReady) {
+    return <div className="min-h-screen bg-slate-50 dark:bg-slate-950" aria-label="Loading authentication" />;
+  }
+
+  return user ? <DashboardApp onLogout={handleLogout} /> : <LoginPage onLogin={handleLogin} />;
 }
 
 export default App;

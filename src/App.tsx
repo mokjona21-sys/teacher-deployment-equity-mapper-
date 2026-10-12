@@ -30,9 +30,7 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
-import { LoginPage } from './components/LoginPage';
-
-function DashboardApp({ onLogout }: { onLogout: () => void }) {
+function DashboardApp() {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
@@ -280,8 +278,7 @@ function DashboardApp({ onLogout }: { onLogout: () => void }) {
           onExportCSV={handleExportCSV}
           onNavigateToRedeployment={() => setCurrentView('redeployment')}
           feasibleMovesCount={metrics.totalFeasibleMoves}
-          onLogout={onLogout}
-        />
+          />
 
         {/* Scrollable View Content */}
         <main className="flex-1 overflow-y-auto px-4 lg:px-8 py-6 max-w-7xl w-full mx-auto">
@@ -492,20 +489,7 @@ function DashboardApp({ onLogout }: { onLogout: () => void }) {
 }
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(() => {
-    return localStorage.getItem('teacher_mapper_authenticated') === 'true';
-  });
-
-  const handleLogout = () => {
-    localStorage.removeItem('teacher_mapper_authenticated');
-    setIsAuthenticated(false);
-  };
-
-  if (!isAuthenticated) {
-    return <LoginPage onLogin={() => setIsAuthenticated(true)} />;
-  }
-
-  return <DashboardApp onLogout={handleLogout} />;
+  return <DashboardApp />;
 }
 
 export default App;

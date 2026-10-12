@@ -24,7 +24,14 @@ app.post('/api/assistant', async (req, res) => {
     res.json({ answer });
   } catch (error) {
     console.error('[v0] Assistant request failed:', error);
-    res.status(503).json({ error: 'The AI Gateway is temporarily unavailable. Please try again.' });
+    const message = error instanceof Error ? error.message : '';
+    const requiresBilling = /credit card|customer_verification_required|billing/i.test(message);
+
+    res.status(requiresBilling ? 402 : 503).json({
+      error: requiresBilling
+        ? 'Vercel AI Gateway requires billing verification before it can answer. Add a credit card to the connected Vercel team, then try again.'
+        : 'The Vercel AI Gateway is temporarily unavailable. Please try again shortly.',
+    });
   }
 });
 const httpServer = createHttpServer(app);

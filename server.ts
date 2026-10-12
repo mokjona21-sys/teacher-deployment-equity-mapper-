@@ -8,6 +8,7 @@ const app = express();
 app.use(express.json({ limit: '32kb' }));
 
 app.post('/api/assistant', async (req, res) => {
+  res.type('application/json');
   const question = typeof req.body?.question === 'string' ? req.body.question.trim() : '';
   const context = typeof req.body?.context === 'string' ? req.body.context.slice(0, 12000) : '';
   res.setHeader('Cache-Control', 'no-store');

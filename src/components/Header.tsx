@@ -50,6 +50,10 @@ const VIEW_TITLES: Record<ViewMode, { title: string; subtitle: string }> = {
     title: 'Features & Workflows',
     subtitle: 'Explore the tools for managing schools, teachers, districts, and equity decisions',
   },
+  faq: {
+    title: 'FAQ & Helpful Tips',
+    subtitle: 'Learn how the mapper works and get practical guidance for staffing decisions',
+  },
 };
 
 export const Header: React.FC<HeaderProps> = ({

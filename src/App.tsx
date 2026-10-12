@@ -29,6 +29,7 @@ import { DistrictMapView } from './components/DistrictMapView';
 import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
+import { FAQView } from './components/FAQView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
 import { LoginPage } from './components/LoginPage';
 import { firebaseAuth } from './lib/firebase';
@@ -476,6 +477,8 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
               <EntityManagementView />
             </div>
           )}
+
+          {currentView === 'faq' && <FAQView />}
         </main>
       </div>
 

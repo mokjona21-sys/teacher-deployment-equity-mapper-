@@ -30,7 +30,6 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
-import { AssistantPanel } from './components/AssistantPanel';
 import { LoginPage } from './components/LoginPage';
 import { firebaseAuth } from './lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -70,7 +69,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
   // Inspected school for detail modal
   const [selectedSchool, setSelectedSchool] = useState<SchoolRecord | null>(null);
-  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
 
   // Filter state
   const [filters, setFilters] = useState<FilterState>({
@@ -113,17 +111,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   const districtSummaries = useMemo(() => {
     return getDistrictSummaries(filteredRecords);
   }, [filteredRecords]);
-
-  const assistantContext = useMemo(() => JSON.stringify({
-    system: 'Teacher Deployment Equity Mapper',
-    currentView,
-    filters,
-    metrics,
-    subjectSummaries,
-    districtSummaries,
-    schools: filteredRecords.slice(0, 100).map(({ school, district, subject, required, available }) => ({ school, district, subject, required, available, balance: available - required })),
-    recommendations: recommendations.slice(0, 50),
-  }), [currentView, filters, metrics, subjectSummaries, districtSummaries, filteredRecords, recommendations]);
 
   // Reset filters
   const handleResetFilters = () => {
@@ -295,8 +282,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           onNavigateToRedeployment={() => setCurrentView('redeployment')}
   feasibleMovesCount={metrics.totalFeasibleMoves}
   onLogout={onLogout}
-  isAssistantOpen={isAssistantOpen}
-  onToggleAssistant={() => setIsAssistantOpen((open) => !open)}
         />
 
         {/* Scrollable View Content */}
@@ -495,8 +480,6 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
       </div>
 
       {/* School Detailed Inspection Modal */}
-  {currentView === 'overview' && isAssistantOpen && <AssistantPanel context={assistantContext} onClose={() => setIsAssistantOpen(false)} />}
-
   <SchoolDetailModal
   school={selectedSchool}
         allRecords={records}

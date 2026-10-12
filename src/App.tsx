@@ -64,10 +64,20 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   const [currentView, setCurrentView] = useState<ViewMode>('overview');
 
   // School dataset state (with support for live in-memory redeployment simulations)
-  const [records, setRecords] = useState<SchoolRecord[]>(INITIAL_RECORDS);
+  const [records, setRecords] = useState<SchoolRecord[]>(() => {
+    if (typeof window === 'undefined') return INITIAL_RECORDS;
+    const saved = localStorage.getItem('edumap_roster_records');
+    if (!saved) return INITIAL_RECORDS;
+    try {
+      return JSON.parse(saved) as SchoolRecord[];
+    } catch {
+      return INITIAL_RECORDS;
+    }
+  });
+
   useEffect(() => {
-    localStorage.removeItem('edumap_directory_entities');
-  }, []);
+    localStorage.setItem('edumap_roster_records', JSON.stringify(records));
+  }, [records]);
   const [isSimulated, setIsSimulated] = useState<boolean>(false);
 
   // Inspected school for detail modal
@@ -185,7 +195,10 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
 
   // Reset simulation back to verified baseline data
   const handleResetSimulation = () => {
-    setRecords(INITIAL_RECORDS);
+    setRecords((current) => [
+      ...INITIAL_RECORDS,
+      ...current.filter((record) => record.isNew),
+    ]);
     setIsSimulated(false);
   };
 

@@ -68,7 +68,7 @@ export const StaffingTable: React.FC<StaffingTableProps> = ({
             School Staffing Roster
           </h2>
           <p className="text-xs text-slate-500 dark:text-slate-400">
-            Net Gap = Required − Available. Positive values indicate a deficit requiring deployment.
+            Status and Net Gap update automatically from Required − Available. Simulate and Inspect use the current row data.
           </p>
         </div>
         <div className="text-xs text-slate-500 dark:text-slate-400 font-mono tabular-nums">

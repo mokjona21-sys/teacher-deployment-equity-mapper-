@@ -30,7 +30,6 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
-import { LoginPage } from './components/LoginPage';
 function DashboardApp() {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -279,10 +278,6 @@ function DashboardApp() {
           onExportCSV={handleExportCSV}
   onNavigateToRedeployment={() => setCurrentView('redeployment')}
   feasibleMovesCount={metrics.totalFeasibleMoves}
-  onLogout={() => {
-    localStorage.removeItem('teacher_equity_authenticated');
-    window.location.reload();
-  }}
   />
 
         {/* Scrollable View Content */}
@@ -517,12 +512,6 @@ class AppErrorBoundary extends React.Component<React.PropsWithChildren, { error:
 }
 
 function App() {
-  const [authenticated, setAuthenticated] = useState(() => localStorage.getItem('teacher_equity_authenticated') === 'true');
-
-  if (!authenticated) {
-    return <LoginPage onAuthenticated={() => setAuthenticated(true)} />;
-  }
-
   return (
     <AppErrorBoundary>
       <DashboardApp />

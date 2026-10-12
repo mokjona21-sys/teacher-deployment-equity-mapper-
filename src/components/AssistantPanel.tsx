@@ -37,7 +37,7 @@ export function AssistantPanel({ context, onClose }: AssistantPanelProps) {
   }
 
   return (
-    <aside id="mapper-assistant-panel" className="fixed bottom-[calc(5rem+env(safe-area-inset-bottom))] right-5 z-[60] flex max-h-[min(32rem,calc(100dvh-7rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-950/20 backdrop-blur-md dark:border-slate-700/90 dark:bg-slate-900/95" aria-label="Equity mapper AI assistant">
+    <aside id="mapper-assistant-panel" className="fixed right-5 top-[4.5rem] z-[60] flex max-h-[min(32rem,calc(100dvh-6rem))] w-[min(360px,calc(100vw-2rem))] flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white/95 shadow-2xl shadow-slate-950/20 backdrop-blur-md dark:border-slate-700/90 dark:bg-slate-900/95" aria-label="Equity mapper AI assistant">
       <div className="flex items-center justify-between bg-slate-950 px-4 py-3 text-white dark:bg-teal-700">
         <div className="flex items-center gap-3">
           <Bot className="h-5 w-5 text-teal-300" />

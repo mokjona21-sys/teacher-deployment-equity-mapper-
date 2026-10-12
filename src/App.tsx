@@ -487,16 +487,22 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
         </main>
       </div>
 
-      <button
-        type="button"
-        onClick={() => setIsAssistantOpen((open) => !open)}
-        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-teal-600 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-teal-700 hover:shadow-xl"
-        aria-label={isAssistantOpen ? 'Close Mapper Assistant' : 'Open Mapper Assistant'}
-      >
-        <Bot className="h-4 w-4" />
-        <span className="hidden sm:inline">Mapper Assistant</span>
-      </button>
-      {isAssistantOpen && <AssistantPanel context={assistantContext} onClose={() => setIsAssistantOpen(false)} />}
+      {currentView === 'overview' && (
+        <>
+          <button
+            type="button"
+            onClick={() => setIsAssistantOpen((open) => !open)}
+            className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-teal-600 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-teal-700 hover:shadow-xl"
+            aria-expanded={isAssistantOpen}
+            aria-controls="mapper-assistant-panel"
+            aria-label={isAssistantOpen ? 'Close Mapper Assistant' : 'Open Mapper Assistant'}
+          >
+            <Bot className="h-4 w-4" />
+            <span className="hidden sm:inline">Mapper Assistant</span>
+          </button>
+          {isAssistantOpen && <AssistantPanel context={assistantContext} onClose={() => setIsAssistantOpen(false)} />}
+        </>
+      )}
 
       {/* School Detailed Inspection Modal */}
       <SchoolDetailModal

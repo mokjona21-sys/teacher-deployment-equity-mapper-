@@ -30,6 +30,8 @@ import { AuditExportView } from './components/AuditExportView';
 import { FeaturesView } from './components/FeaturesView';
 import { EntityManagementView } from './components/EntityManagementView';
 import { SchoolDetailModal } from './components/SchoolDetailModal';
+import { AssistantPanel } from './components/AssistantPanel';
+import { Bot } from 'lucide-react';
 import { LoginPage } from './components/LoginPage';
 import { firebaseAuth } from './lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
@@ -66,6 +68,7 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   // School dataset state (with support for live in-memory redeployment simulations)
   const [records, setRecords] = useState<SchoolRecord[]>(INITIAL_RECORDS);
   const [isSimulated, setIsSimulated] = useState<boolean>(false);
+  const [isAssistantOpen, setIsAssistantOpen] = useState(false);
 
   // Inspected school for detail modal
   const [selectedSchool, setSelectedSchool] = useState<SchoolRecord | null>(null);
@@ -111,6 +114,11 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   const districtSummaries = useMemo(() => {
     return getDistrictSummaries(filteredRecords);
   }, [filteredRecords]);
+
+  const assistantContext = JSON.stringify({
+    metrics,
+    visibleSchools: filteredRecords.slice(0, 40).map(({ school, district, subject, required, available }) => ({ school, district, subject, required, available, balance: available - required })),
+  });
 
   // Reset filters
   const handleResetFilters = () => {
@@ -478,6 +486,17 @@ function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
           )}
         </main>
       </div>
+
+      <button
+        type="button"
+        onClick={() => setIsAssistantOpen((open) => !open)}
+        className="fixed bottom-5 right-5 z-40 inline-flex items-center gap-2 rounded-full bg-teal-600 px-4 py-3 text-sm font-bold text-white shadow-lg transition hover:bg-teal-700 hover:shadow-xl"
+        aria-label={isAssistantOpen ? 'Close Mapper Assistant' : 'Open Mapper Assistant'}
+      >
+        <Bot className="h-4 w-4" />
+        <span className="hidden sm:inline">Mapper Assistant</span>
+      </button>
+      {isAssistantOpen && <AssistantPanel context={assistantContext} onClose={() => setIsAssistantOpen(false)} />}
 
       {/* School Detailed Inspection Modal */}
       <SchoolDetailModal

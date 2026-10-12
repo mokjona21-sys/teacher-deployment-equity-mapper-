@@ -498,6 +498,7 @@ function App() {
   useEffect(() => {
     const authApi = window.teacherEquityAuth;
     if (!authApi) {
+      setUser(localStorage.getItem('teacher-equity-authenticated') === 'true' ? { preview: true } : null);
       setAuthReady(true);
       return;
     }
@@ -510,13 +511,25 @@ function App() {
 
   async function handleLogin(email: string, password: string) {
     const authApi = window.teacherEquityAuth;
-    if (!authApi) throw new Error('Firebase authentication is not configured.');
-    await authApi.signInWithEmailAndPassword(authApi.auth, email, password);
+    if (authApi) {
+      await authApi.signInWithEmailAndPassword(authApi.auth, email, password);
+      return;
+    }
+
+    const expectedUser = import.meta.env.vite_app_name || 'Mapper';
+    const expectedPass = import.meta.env.vite_app_password || '1234';
+    if (email !== expectedUser || password !== expectedPass) {
+      throw new Error('Invalid credentials');
+    }
+
+    localStorage.setItem('teacher-equity-authenticated', 'true');
+    setUser({ preview: true });
   }
 
   async function handleLogout() {
     const authApi = window.teacherEquityAuth;
     if (authApi) await authApi.signOut(authApi.auth);
+    localStorage.removeItem('teacher-equity-authenticated');
     setUser(null);
   }
 

@@ -29,8 +29,16 @@
       measurementId: "G-BRGKLKXQYF"
     };
 
-    const auth = getAuth(initializeApp(firebaseConfig));
-    window.teacherEquityAuth = { auth, onAuthStateChanged, signInWithEmailAndPassword, signOut };
+    // The preview may not provide a Firebase API key. Do not initialize Firebase
+    // with an empty or placeholder key because that causes auth/invalid-api-key
+    // before React can render the application.
+    const apiKey = firebaseConfig.apiKey;
+    const isUsableApiKey = typeof apiKey === "string" && apiKey.trim().length > 0 && !apiKey.includes("*");
+
+    if (isUsableApiKey) {
+      const auth = getAuth(initializeApp(firebaseConfig));
+      window.teacherEquityAuth = { auth, onAuthStateChanged, signInWithEmailAndPassword, signOut };
+    }
   </script>
   <script type="module" src="/src/main.tsx"></script>
 </body>

@@ -39,9 +39,9 @@ export const LoginPage: React.FC<LoginPageProps> = ({ onLogin }) => {
 
         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
           <label className="flex flex-col gap-2 text-sm font-semibold text-slate-700 dark:text-slate-200">
-            Email
+            Username
             <input
-              type="email"
+              type="text"
               autoComplete="username"
               required
               value={email}

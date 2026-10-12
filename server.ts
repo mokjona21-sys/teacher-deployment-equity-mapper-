@@ -10,7 +10,7 @@ const port = Number(process.env.PORT ?? 3000);
 const vite = await createViteServer({
   server: {
     middlewareMode: true,
-    hmr: {
+    ws: {
       server: httpServer,
     },
   },

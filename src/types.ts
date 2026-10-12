@@ -28,7 +28,8 @@ export type ViewMode =
   | 'visualizations' 
   | 'map' 
   | 'audit' 
-  | 'features';
+  | 'features'
+  | 'faq';
 
 export type StatusFilter = 'all' | 'shortage' | 'surplus' | 'balanced';
 

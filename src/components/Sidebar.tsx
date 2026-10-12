@@ -12,7 +12,8 @@ import {
   ChevronRight,
   GraduationCap,
   ShieldCheck,
-  Sparkles
+  Sparkles,
+  CircleHelp
 } from 'lucide-react';
 import { ViewMode } from '../types';
 
@@ -81,6 +82,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
       id: 'features' as ViewMode,
       label: 'Features',
       icon: Sparkles,
+      badge: null,
+    },
+    {
+      id: 'faq' as ViewMode,
+      label: 'FAQ & Tips',
+      icon: CircleHelp,
       badge: null,
     },
   ];

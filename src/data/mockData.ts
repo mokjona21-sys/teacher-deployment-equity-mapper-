@@ -1,6 +1,6 @@
 import { SchoolRecord } from '../types';
 
-export const INITIAL_RECORDS: SchoolRecord[] = [
+const SEED_RECORDS: SchoolRecord[] = [
   // Wakiso District - Mathematics
   { id: 'w-m-1', school: 'Nabweru Primary', district: 'Wakiso', subject: 'Mathematics', required: 5, available: 3, km: 6, studentCount: 420, coordinates: { x: 38, y: 32 } },
   { id: 'w-m-2', school: 'Kawanda Primary', district: 'Wakiso', subject: 'Mathematics', required: 4, available: 6, km: 12, studentCount: 390, coordinates: { x: 34, y: 22 } },
@@ -67,6 +67,17 @@ export const INITIAL_RECORDS: SchoolRecord[] = [
   { id: 'lu-e-1', school: 'Bombo Common Ground', district: 'Luweero', subject: 'English', required: 5, available: 3, km: 20, studentCount: 480, coordinates: { x: 42, y: 18 } },
   { id: 'lu-e-2', school: 'Luweero Boys Primary', district: 'Luweero', subject: 'English', required: 4, available: 4, km: 8, studentCount: 430, coordinates: { x: 48, y: 8 } }
 ];
+
+const TEACHER_NAMES = [
+  'Sarah Namirembe', 'David Okello', 'Grace Achieng', 'Peter Mugisha',
+  'Mary Nankya', 'James Kato', 'Esther Atim', 'Samuel Tumusiime',
+  'Ruth Nakato', 'Daniel Ouma', 'Agnes Namusoke', 'Robert Ssekabira',
+];
+
+export const INITIAL_RECORDS: SchoolRecord[] = SEED_RECORDS.map((record, index) => ({
+  ...record,
+  teacherName: record.teacherName ?? TEACHER_NAMES[index % TEACHER_NAMES.length],
+}));
 
 export const DISTRICT_METADATA: Record<string, { centerName: string; region: string; targetRatio: number }> = {
   Wakiso: { centerName: 'Wakiso Headquarters', region: 'Central Buganda', targetRatio: 1.0 },

@@ -33,6 +33,7 @@ import { SchoolDetailModal } from './components/SchoolDetailModal';
 import { LoginPage } from './components/LoginPage';
 import { firebaseAuth } from './lib/firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 function DashboardApp({ onLogout }: { onLogout: () => Promise<void> }) {
   // Dark mode state with persistent storage and system preference
   const [isDark, setIsDark] = useState<boolean>(() => {
@@ -564,6 +565,7 @@ function App() {
   return (
     <AppErrorBoundary>
       <DashboardApp onLogout={() => signOut(firebaseAuth)} />
+      <SpeedInsights />
     </AppErrorBoundary>
   );
 }
